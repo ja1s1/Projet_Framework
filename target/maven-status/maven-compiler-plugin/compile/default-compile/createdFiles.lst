@@ -1,0 +1,9 @@
+com\myapp\repository\DemandeRepository.class
+com\myapp\MyAppApplication.class
+com\myapp\controller\ClientController.class
+com\myapp\repository\ClientRepository.class
+com\myapp\controller\DemandeController.class
+com\myapp\service\ClientService.class
+com\myapp\entity\Demande.class
+com\myapp\service\DemandeService.class
+com\myapp\entity\Client.class

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Formulaire Candidat</title>
+	<link rel="stylesheet" th:href="@{/styles.css}" />
+</head>
+<body>
+
+<div class="card">
+	<div class="card-header">
+		<h2>Formulaire Candidat</h2>
+	</div>
+
+	<p><a class="badge" href="/demandes">Retour liste</a></p>
+
+	<form th:action="@{/demandes/save}" th:object="${demande}" method="post">
+
+    <div>
+		<label>ID</label>
+		<input type="text" th:field="*{idDemande}" />
+	</div>
+
+	<div>
+		<label>Liste des clients :</label>
+		<select th:field="*{client.idClient}" required>
+            <option th:each="c : ${clients}"
+                    th:value="${c.idClient}"
+                    th:text="${c.nom}">
+        </option>
+        </select>
+	</div>
+	<div>
+		<label>Lieu</label>
+		<input type="text" th:field="*{lieu}" />
+	</div>
+	<div>
+		<label>District</label>
+		<input type="text" th:field="*{district}" />
+	</div>
+
+	<button class="success" type="submit">Enregistrer</button>
+	</form>
+
+</div>
+
+</body>
+</html>

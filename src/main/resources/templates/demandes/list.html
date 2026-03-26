@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Liste Candidats</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" />
+</head>
+<body>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Liste des clients</h2>
+        </div>
+
+        <p>
+            <a class="badge" href="/">Accueil</a>
+            <a class="badge success" href="/demandes/new">Ajouter</a>
+        </p>
+
+
+
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>NomClient</th>
+                <th>Lieu</th>
+                <th>District</th>
+                <th>Action</th>
+            </tr>
+
+            <tr th:each="d : ${demandes}">
+                <td th:text="${d.idDemande}"></td>
+                <td th:text="${d.client.nom}"></td>
+                <td th:text="${d.lieu}"></td>
+                <td th:text="${d.district}"></td>
+
+                <td>
+                    <a class="badge primary" th:href="@{/demandes/edit/{id}(id=${d.idDemande})}">Edit</a>
+                    <a class="badge danger" th:href="@{/demandes/delete/{id}(id=${d.idDemande})}">Delete</a>
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+</body>
+</html>
