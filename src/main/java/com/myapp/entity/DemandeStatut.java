@@ -21,8 +21,17 @@ public class DemandeStatut {
     @JoinColumn(name = "id_demande", nullable = false)
     private Demande demande;
 
-    @Column(nullable = false)
-    private Integer idStatut = 1;
+    @ManyToOne
+    @JoinColumn(name = "id_statut", nullable = false)
+    private Statut statut;
+
+    public Statut getStatut() {
+        return statut;
+    }
+
+    public void setStatut(Statut statut) {
+        this.statut = statut;
+    }
 
     @Column(nullable = false)
     private LocalDateTime dateDemande = LocalDateTime.now();
@@ -43,13 +52,7 @@ public class DemandeStatut {
         this.demande = demande;
     }
 
-    public Integer getIdStatut() {
-        return idStatut;
-    }
 
-    public void setIdStatut(Integer idStatut) {
-        this.idStatut = idStatut;
-    }
 
     public LocalDateTime getDateDemande() {
         return dateDemande;

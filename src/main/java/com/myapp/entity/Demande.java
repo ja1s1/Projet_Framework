@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,6 +24,18 @@ public class Demande {
 
     @Column(name = "district")
     private String district;
+
+    @OneToOne
+    @JoinColumn(name = "id_devis", referencedColumnName = "id_devis")
+    private Devis devis;
+
+    public Devis getDevis() {
+        return devis;
+    }
+
+    public void setDevis(Devis devis) {
+        this.devis = devis;
+    }
 
     public String getIdDemande() {
         return idDemande;
