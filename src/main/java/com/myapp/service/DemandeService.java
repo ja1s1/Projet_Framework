@@ -30,7 +30,7 @@ public class DemandeService {
         return demandeRepository.findAll();
     }
 
-    public Demande getDemandeById(Integer id){
+    public Demande getDemandeById(String id){
         return demandeRepository.findById(id).orElse(null);
     }
 
@@ -47,7 +47,7 @@ public class DemandeService {
         return savedDemande;
     }
 
-    public void deleteDemande(Integer id){
+    public void deleteDemande(String id){
         demandeRepository.deleteById(id);
     }
 }

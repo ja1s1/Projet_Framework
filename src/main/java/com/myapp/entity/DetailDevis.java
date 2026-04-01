@@ -1,6 +1,8 @@
 package com.myapp.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +29,7 @@ public class DetailDevis {
 
     @ManyToOne
     @JoinColumn(name = "id_devis")
+    @JsonBackReference
     private Devis devis;
 
     public Devis getDevis() {

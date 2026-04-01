@@ -3,10 +3,12 @@ package com.myapp.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.myapp.entity.TypeDevis;
 import com.myapp.repository.TypeDevisRepository;
 
+@Service
 public class TypeDevisService {
     @Autowired
     private TypeDevisRepository typeDevisRepository;
