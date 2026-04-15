@@ -46,13 +46,13 @@ public class DemandeController {
     }
 
     @GetMapping("/edit/{id}")
-    public String editDemande(@PathVariable Integer id, Model model){
+    public String editDemande(@PathVariable String id, Model model){
         model.addAttribute("demande", demandeService.getDemandeById(id));
         return "demandes/form";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteDemande(@PathVariable Integer id){
+    public String deleteDemande(@PathVariable String id){
         demandeService.deleteDemande(id);
         return "redirect:/demandes";
     }

@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.myapp.entity.Demande;
 import com.myapp.entity.DemandeStatut;
+import com.myapp.entity.Statut;
 import com.myapp.repository.DemandeRepository;
 import com.myapp.repository.DemandeStatutRepository;
+import com.myapp.repository.StatutRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -21,27 +23,31 @@ public class DemandeService {
     @Autowired
     private DemandeStatutRepository demandeStatutRepository;
 
+    @Autowired
+    private StatutRepository statutRepository;
+
     public List<Demande> getAllDemande(){
         return demandeRepository.findAll();
     }
 
-    public Demande getDemandeById(Integer id){
+    public Demande getDemandeById(String id){
         return demandeRepository.findById(id).orElse(null);
     }
 
     @Transactional
     public Demande saveDemande(Demande demande){
         Demande savedDemande =  demandeRepository.save(demande);
+        Statut StatutParDefaut = statutRepository.findById(1).orElseThrow(() -> new RuntimeException("Statut introuvable"));
 
         DemandeStatut ds = new DemandeStatut();
         ds.setDemande(savedDemande);
-        ds.setIdDemandeStatut(1);
+        ds.setStatut(StatutParDefaut);
         demandeStatutRepository.save(ds);
 
         return savedDemande;
     }
 
-    public void deleteDemande(Integer id){
+    public void deleteDemande(String id){
         demandeRepository.deleteById(id);
     }
 }

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Création Devis</title>
+
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .box { border:1px solid #ccc; padding:15px; margin-bottom:15px; }
+        .detail { border:1px dashed #999; padding:10px; margin-top:10px; position:relative;}
+        .remove-btn {
+            position:absolute;
+            right:10px;
+            top:10px;
+            background:red;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+        .add-btn {
+            background:green;
+            color:white;
+            border:none;
+            padding:8px 15px;
+            cursor:pointer;
+            margin-top:10px;
+        }
+        .submit-btn {
+            margin-top:20px;
+            padding:10px 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Créer un devis</h2>
+
+<form th:action="@{/devis/create}" method="post">
+
+    <!-- ================= DEMANDE ================= -->
+    <div class="box">
+        <label>ID Demande :</label>
+        <input type="text" id="demandeInput" name="idDemande" required>
+        <div id="clientInfo" style="margin-top:10px; font-weight:bold; color:blue;"></div>
+    </div>
+
+    <!-- ================= TYPE DEVIS ================= -->
+    <div class="box">
+        <label>Type de devis :</label>
+        <select name="typeDevis" required>
+            <option value="">-- Choisir --</option>
+            <option th:each="t : ${type}"
+                    th:value="${t.idTypeDevis}"
+                    th:text="${t.libelle}">
+            </option>
+        </select>
+    </div>
+
+    <!-- ================= DETAILS ================= -->
+    <div class="box">
+        <h3>Détails du devis</h3>
+        <div id="detailsContainer"></div>
+        <div style="margin-top:15px; font-size:18px; font-weight:bold;">
+            Montant Total : <span id="montantTotal">0</span>
+        </div>
+
+        <button type="button" class="add-btn" onclick="addDetail()">+ Ajouter détail</button>
+    </div>
+
+    <button type="submit" class="submit-btn">Valider le devis</button>
+</form>
+
+<!-- ================= JAVASCRIPT ================= -->
+<script>
+
+    function calculer(input) {
+    const detailDiv = input.closest(".detail");
+
+    const pu = parseFloat(detailDiv.querySelector("[name*='.pu']").value) || 0;
+    const qte = parseFloat(detailDiv.querySelector("[name*='.qte']").value) || 0;
+
+    const montant = pu * qte;
+
+    detailDiv.querySelector(".montant").value = montant.toFixed(2);
+
+    calculerTotal();
+}
+
+function calculerTotal() {
+    let total = 0;
+
+    document.querySelectorAll(".montant").forEach(m => {
+        total += parseFloat(m.value) || 0;
+    });
+
+    document.getElementById("montantTotal").innerText = total.toFixed(2);
+}
+
+/* ========= AUTO CHARGEMENT CLIENT ========= */
+document.getElementById("demandeInput").addEventListener("keyup", function () {
+    const id = this.value.trim();
+    const clientInfoDiv = document.getElementById("clientInfo");
+
+    if(id === "") {
+        clientInfoDiv.innerText = "";
+        return;
+    }
+
+    fetch("/api/demande/" + id)
+    .then(res => {
+        if(!res.ok) throw new Error("Demande introuvable");
+        return res.json();
+    })
+    .then(data => {
+        clientInfoDiv.innerText = `${data.client.nom} - ${data.client.contact} - ${data.lieu} - ${data.district}`;
+    })
+    .catch(err =>{
+        clientInfoDiv.innerText = err.message;
+    });
+});
+
+
+/* ========= DETAILS DYNAMIQUES ========= */
+let index = 0;
+
+function addDetail() {
+    const html = `
+        <div class="detail">
+            <button type="button" class="remove-btn" onclick="removeDetail(this)">X</button>
+
+            <label>Libellé :</label>
+            <input name="details[].libelle" required>
+
+            <label>Prix Unitaire :</label>
+            <input type="number" step="0.01"
+                   name="details[].pu"
+                   oninput="calculer(this)" required>
+
+            <label>Quantité :</label>
+            <input type="number"
+                   name="details[].qte"
+                   oninput="calculer(this)" required>
+
+            <label>Montant :</label>
+            <input type="number" class="montant" readonly value="0">
+        </div>
+    `;
+
+    document.getElementById("detailsContainer")
+            .insertAdjacentHTML("beforeend", html);
+
+    index++;
+}
+
+function removeDetail(btn){
+    btn.parentElement.remove();
+    calculerTotal();
+}
+
+</script>
+
+</body>
+</html>
